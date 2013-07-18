@@ -1,1 +1,2 @@
-mongoengine>=0.7.10
+mongoengine>=0.8.2
+wtforms>=1.0.4
