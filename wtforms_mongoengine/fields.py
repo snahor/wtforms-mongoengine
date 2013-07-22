@@ -34,13 +34,20 @@ class QuerySetSelectField(SelectFieldBase):
     """
     widget = widgets.Select()
 
-    def __init__(self, label=u'', validators=None, queryset=None, label_attr='',
-                 allow_blank=False, blank_text=u'---', **kwargs):
+    def __init__(self,
+                 label=u'',
+                 validators=None,
+                 queryset=None,
+                 queryset_factory=None,
+                 label_attr='',
+                 allow_blank=False,
+                 blank_text=u'---',
+                 **kwargs):
         super(QuerySetSelectField, self).__init__(label, validators, **kwargs)
         self.label_attr = label_attr
         self.allow_blank = allow_blank
         self.blank_text = blank_text
-        self.queryset = queryset
+        self.queryset = queryset or queryset_factory()
 
     def iter_choices(self):
         if self.allow_blank:
