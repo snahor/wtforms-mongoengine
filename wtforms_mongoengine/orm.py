@@ -228,7 +228,12 @@ def model_fields(model, only=None, exclude=None, field_args=None, converter=None
     converter = converter or ModelConverter()
     field_args = field_args or {}
 
-    names = ((k, v.creation_counter) for k, v in model._fields.iteritems())
+    if hasattr(model._fields, 'iteritems'):
+        fields = model._fields.iteritems()
+    elif hasattr(model._fields, 'items'):
+        fields = model._fields.items()
+
+    names = ((k, v.creation_counter) for k, v in fields)
     field_names = map(itemgetter(0), sorted(names, key=itemgetter(1)))
 
     if only:
