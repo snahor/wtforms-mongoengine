@@ -38,10 +38,10 @@ class QuerySetSelectField(SelectFieldBase):
                  label=u'',
                  validators=None,
                  queryset=None,
-                 queryset_factory=None,
                  label_attr='',
                  allow_blank=False,
                  blank_text=u'---',
+                 queryset_factory=None,
                  **kwargs):
         super(QuerySetSelectField, self).__init__(label, validators, **kwargs)
         self.label_attr = label_attr
