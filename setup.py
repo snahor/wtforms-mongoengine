@@ -1,16 +1,10 @@
 """
-Flask-MongoEngine
+WTForms-MongoEngine
 --------------
 
-Flask support for MongoDB using MongoEngine.
-Includes `WTForms`_ support.
+WTForms extensions for Mongoengine.
 
-Links
-`````
-
-* `development version
-  <https://github.com/mongoengine/flask-mongoengine/raw/master#egg=Flask-MongoEngine-dev>`_
-
+It's a fork of Flask-Mongoengine, but Flask depedencies were removed.
 """
 from setuptools import setup
 
@@ -21,33 +15,28 @@ except:
     pass
 
 setup(
-    name='flask-mongoengine',
-    version='0.7.0RC1',
-    url='https://github.com/mongoengine/flask-mongoengine',
+    name='wtforms-mongoengine',
+    version='0.1',
+    url='https://github.com/snahor/wtforms-mongoengine',
     license='BSD',
-    author='Ross Lawley',
-    author_email='ross.lawley@gmail.com',
-    description='Flask support for MongoDB and with WTF model forms',
+    description='WTForms extension for mongoengine',
+    author="Hans Roman",
+    author_email="hans@roman.pe",
     long_description=__doc__,
-    test_suite='nose.collector',
     zip_safe=False,
     platforms='any',
     install_requires=[
-        'Flask>=0.8',
-        'mongoengine>=0.7.10',
-        'flask-wtf',
+        'mongoengine>=0.8.2',
+        'wtforms>=1.0.4',
     ],
-    packages=['flask_mongoengine',
-              'flask_mongoengine.wtf'],
-    include_package_data=True,
-    tests_require=['nose', 'coverage'],
+    packages=['wtforms_mongoengine'],
     classifiers=[
-        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ]
