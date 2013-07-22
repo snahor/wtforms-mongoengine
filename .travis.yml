@@ -9,6 +9,6 @@ script:
   - py.test tests -v
 branches:
   only:
-    - dev
+    - master
 notifications:
   email: false
