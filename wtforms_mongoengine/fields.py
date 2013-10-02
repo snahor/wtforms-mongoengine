@@ -45,13 +45,12 @@ class QuerySetSelectField(SelectFieldBase):
                  label_attr='',
                  allow_blank=False,
                  blank_text=u'---',
-                 queryset_factory=None,
                  **kwargs):
         super(QuerySetSelectField, self).__init__(label, validators, **kwargs)
         self.label_attr = label_attr
         self.allow_blank = allow_blank
         self.blank_text = blank_text
-        self.queryset = queryset or queryset_factory()
+        self.queryset = callable(queryset) and queryset() or queryset
 
     def iter_choices(self):
         if self.allow_blank:
