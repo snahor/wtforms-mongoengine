@@ -162,7 +162,8 @@ class ModelConverter(object):
     @converts('ListField')
     def conv_List(self, model, field, kwargs):
         if isinstance(field.field, ReferenceField):
-            return ModelSelectMultipleField(model=field.field.document_type, **kwargs)
+            return ModelSelectMultipleField(model=field.field.document_type,
+                                            **kwargs)
         if field.field.choices:
             kwargs['multiple'] = True
             return self.convert(model, field.field, kwargs)
@@ -219,7 +220,8 @@ class ModelConverter(object):
         return coercions.get(field_type, unicode)
 
 
-def model_fields(model, only=None, exclude=None, field_args=None, converter=None):
+def model_fields(model, only=None, exclude=None,
+                 field_args=None, converter=None):
     """
     Generate a dictionary of fields for a given database model.
 
@@ -255,7 +257,8 @@ def model_fields(model, only=None, exclude=None, field_args=None, converter=None
     return field_dict
 
 
-def model_form(model, base_class=ModelForm, only=None, exclude=None, field_args=None, converter=None):
+def model_form(model, base_class=ModelForm, only=None,
+               exclude=None, field_args=None, converter=None):
     """
     Create a wtforms Form for a given mongoengine Document schema::
 
