@@ -9,10 +9,14 @@ from wtforms.fields import SelectFieldBase, TextAreaField, StringField
 from wtforms.validators import ValidationError
 
 from mongoengine.queryset import DoesNotExist
-from mongoengine.python_support import txt_type, bin_type
+from mongoengine.python_support import txt_type, bin_type, PY3
+
+if PY3:
+    unicode = str
 
 __all__ = (
-    'ModelSelectField', 'QuerySetSelectField',
+    'ModelSelectField',
+    'QuerySetSelectField',
 )
 
 
@@ -75,7 +79,8 @@ class QuerySetSelectField(SelectFieldBase):
                     return
 
                 try:
-                    # clone() because of https://github.com/MongoEngine/mongoengine/issues/56
+                    # clone() because of
+                    # https://github.com/MongoEngine/mongoengine/issues/56
                     obj = self.queryset.clone().get(id=valuelist[0])
                     self.data = obj
                 except DoesNotExist:
@@ -94,9 +99,12 @@ class QuerySetSelectMultipleField(QuerySetSelectField):
 
     widget = widgets.Select(multiple=True)
 
-    def  __init__(self, label=u'', validators=None, queryset=None, label_attr='',
-                  allow_blank=False, blank_text=u'---', **kwargs):
-        super(QuerySetSelectMultipleField, self).__init__(label, validators, queryset, label_attr, allow_blank, blank_text, **kwargs)
+    def __init__(self, label=u'', validators=None, queryset=None,
+                 label_attr='', allow_blank=False,
+                 blank_text=u'---', **kwargs):
+        super(QuerySetSelectMultipleField, self).__init__(
+            label, validators, queryset,
+            label_attr, allow_blank, blank_text, **kwargs)
 
     def process_formdata(self, valuelist):
         if valuelist:
@@ -108,7 +116,11 @@ class QuerySetSelectMultipleField(QuerySetSelectField):
                     return
 
                 self.queryset.rewind()
-                self.data = [obj for obj in self.queryset if str(obj.id) in valuelist]
+                self.data = [
+                    obj
+                    for obj in self.queryset
+                    if str(obj.id) in valuelist
+                ]
                 if not len(self.data):
                     self.data = None
 
@@ -123,7 +135,8 @@ class ModelSelectField(QuerySetSelectField):
     """
     def __init__(self, label=u'', validators=None, model=None, **kwargs):
         queryset = kwargs.pop('queryset', model.objects)
-        super(ModelSelectField, self).__init__(label, validators, queryset=queryset, **kwargs)
+        super(ModelSelectField, self).__init__(label, validators,
+                                               queryset=queryset, **kwargs)
 
 
 class ModelSelectMultipleField(QuerySetSelectMultipleField):
@@ -132,7 +145,9 @@ class ModelSelectMultipleField(QuerySetSelectMultipleField):
     """
     def __init__(self, label=u'', validators=None, model=None, **kwargs):
         queryset = kwargs.pop('queryset', model.objects)
-        super(ModelSelectMultipleField, self).__init__(label, validators, queryset=queryset, **kwargs)
+        super(ModelSelectMultipleField, self).__init__(label, validators,
+                                                       queryset=queryset,
+                                                       **kwargs)
 
 
 class JSONField(TextAreaField):
@@ -168,6 +183,7 @@ class NoneStringField(StringField):
         if self.data == "":
             self.data = None
 
+
 class BinaryField(TextAreaField):
     """
     Custom TextAreaField that converts its value with bin_type.
@@ -175,4 +191,7 @@ class BinaryField(TextAreaField):
 
     def process_formdata(self, valuelist):
         if valuelist:
-            self.data = bin_type( valuelist[0] )
+            if PY3:
+                self.data = bin_type(valuelist[0], 'utf-8')
+            else:
+                self.data = bin_type(valuelist[0])

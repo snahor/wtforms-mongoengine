@@ -13,6 +13,10 @@ except ImportError:
 
 from wtforms import fields as f, validators
 from mongoengine import ReferenceField
+from mongoengine.python_support import PY3
+
+if PY3:
+    unicode = str
 
 from .fields import (
     ModelSelectField,
