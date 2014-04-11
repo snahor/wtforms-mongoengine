@@ -9,7 +9,8 @@ from wtforms.fields import SelectFieldBase, TextAreaField, StringField
 from wtforms.validators import ValidationError
 
 from mongoengine.queryset import DoesNotExist
-from mongoengine.python_support import txt_type, bin_type, PY3
+from mongoengine.python_support import bin_type, PY3
+from mongoengine.fields import SequenceField, IntField
 
 if PY3:
     unicode = str
@@ -52,6 +53,14 @@ class QuerySetSelectField(SelectFieldBase):
         self.blank_text = blank_text
         self.queryset = callable(queryset) and queryset() or queryset
 
+    def _coerce(self, value):
+        """Coerce the value to the appropriate type."""
+        if self.queryset is not None:
+            field = self.queryset._document.id
+            if isinstance(field, (SequenceField, IntField)):
+                return int(value)
+        return value
+
     def iter_choices(self):
         if self.allow_blank:
             yield (u'__None', self.blank_text, self.data is None)
@@ -80,7 +89,9 @@ class QuerySetSelectField(SelectFieldBase):
                 try:
                     # clone() because of
                     # https://github.com/MongoEngine/mongoengine/issues/56
-                    obj = self.queryset.clone().get(id=valuelist[0])
+                    obj = self.queryset.clone().get(
+                        pk=self._coerce(valuelist[0])
+                    )
                     self.data = obj
                 except DoesNotExist:
                     self.data = None
