@@ -7,9 +7,9 @@ WTForms-Mongoengine is a fork of [Flask-Mongoengine][1] without the Flask depend
 This package provides additional fields like:
 
     ModelSelectField
-    ModelSelectField
+    ModelSelectMultipleField
     QuerySetSelectField
-    QuerySetMultipleSelectField
+    QuerySetSelectMultipleField
     
 Also, you can generate forms from models with `model_form`.
 
